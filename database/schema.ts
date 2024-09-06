@@ -1,7 +1,7 @@
-import { timestamp, pgTable, text, primaryKey, integer, pgEnum } from "drizzle-orm/pg-core"
+import { pgTable, text, integer, timestamp, pgEnum } from "drizzle-orm/pg-core"
 import type { AdapterAccountType } from "next-auth/adapters"
 
-export const authRole = pgEnum("auth_role", ["USER", "ADMIN"]);
+export const authRole = pgEnum("auth_role", ['USER', 'ADMIN'])
 
 // for magiclinks first auth
 export const users = pgTable("user", {
@@ -10,12 +10,13 @@ export const users = pgTable("user", {
   email: text("email").unique(),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
   image: text("image"),
-  role: authRole('role').notNull().default('USER')
+  role: authRole('role').notNull().default('USER'),
+  createdAt: timestamp('created_at').defaultNow().notNull()
 })
 
 // for user with social logins
 export const accounts = pgTable("account", {
-    userId: text("userId").notNull().references(() => users.id, { onDelete: "cascade" }), // fkey relation with user table
+    userId: text("userId").notNull().references(() => users.id, { onDelete: "cascade" }), // foreign-key relation with user table
     type: text("type").$type<AdapterAccountType>().notNull(),
     provider: text("provider").notNull(),
     providerAccountId: text("providerAccountId").notNull(),
@@ -27,20 +28,4 @@ export const accounts = pgTable("account", {
     session_state: text("session_state"),
     token_type: text("token_type"),
   }
-)
-
-// for magiclinks verification tokens
-export const verificationTokens = pgTable(
-  "verificationToken",
-  {
-    identifier: text("identifier").notNull(),
-    token: text("token").notNull(),
-    expires: timestamp("expires", { mode: "date" }).notNull(),
-  },
-  // composite primary key
-  (verificationToken) => ({
-    compositePk: primaryKey({
-      columns: [verificationToken.identifier, verificationToken.token],
-    }),
-  })
 )
