@@ -49,14 +49,14 @@ const EmailSignInForm = () => {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="johndoe@email.com" {...field} />
+                  <Input disabled placeholder="johndoe@email.com" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
               
             )}
           />
-          <Button
+          <Button disabled
             type="submit"
             size={"custom"}
             className="bg-blue-500 hover:bg-blue-400 py-2 px-3 gap-2 rounded w-full"
